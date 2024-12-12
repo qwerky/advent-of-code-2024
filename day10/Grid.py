@@ -87,15 +87,15 @@ class Grid:
         return graph
     
 
-    def countPaths(self, node:tuple, end:tuple, visited:dict, graph:dict, count:int) -> int:
+    def countPaths(self, node:tuple, visited:dict, graph:dict, count:int) -> int:
        visited[node] = True
        
-       if node == end:
+       if self.grid[node[0]][node[1]] == "9":
            count += 1
        else:
            for next in graph[node]:
                if visited[next] == False:
-                   count = self.countPaths(next, end, visited, graph, count)
+                   count = self.countPaths(next, visited, graph, count)
        visited[node] = False
        return count
     
