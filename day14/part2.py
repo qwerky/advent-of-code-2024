@@ -17,8 +17,14 @@ def step(val):
         xPos = 10*robot.x
         yPos = 10*robot.y
         canvas.moveto(image, xPos, yPos)
+    chiVal = grid.suspicious()
+    if chiVal > 50:
+        chiLabelValue.config(fg="red")
+    else:
+        chiLabelValue.config(fg="black")
+    chiLabelValue.config(text=f'{chiVal:5.2f}')
     canvas.update()
-    if grid.suspicious() > 50:
+    if chiVal > 50:
         sleep(2)
 
 input = open("day14/input.txt", "r")
@@ -35,9 +41,16 @@ window = tk.Tk()
 window.title("Bathroom Robots")
 window.geometry("1150x1150")
 
+frame = tk.Frame(window, width=600, height=60, relief=tk.RAISED, borderwidth=4)
 labelFont = font.Font(size=30)
-label = tk.Label(text="0", font=labelFont)
-label.pack()
+label = tk.Label(frame, text="0", font=labelFont)
+label.pack(side=tk.LEFT)
+chiLabel = tk.Label(frame, text="  Chi test: ", font=labelFont)
+chiLabel.pack(side=tk.LEFT)
+chiLabelValue = tk.Label(frame, text="", font=labelFont)
+chiLabelValue.pack(side=tk.LEFT)
+frame.pack()
+
 
 robotImage = tk.PhotoImage(file="day14/robot.png")
 canvas = tk.Canvas(window, width="1010", height="1030")
@@ -50,6 +63,10 @@ for robot in grid.robots:
     image = canvas.create_image(xPos, yPos, image=robotImage)
     sprites.append((robot, image))
 
+
+# Skip the boring bit
+while grid.steps < 7600:
+    grid.step(1)
 
 while grid.steps < 10000:
     step(1)
