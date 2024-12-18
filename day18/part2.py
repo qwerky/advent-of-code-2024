@@ -6,10 +6,16 @@ lines = input.read().splitlines()
 
 count = 0
 for line in lines:
-    print("Trying block " + line)
-    row = int(line.split(",")[0])
-    col = int(line.split(",")[1])
+    col = int(line.split(",")[0])
+    row = int(line.split(",")[1])
     grid.grid[col][row] = "#"
     count += 1
-    path = grid.dijkstra()
-    print(f"OK after {count} blocks, path is {len(path)-1}")
+
+    if count > 1024:
+        path = grid.dijkstra()
+        if len(path) > 1:
+            if count % 100 == 0:
+                print(f"OK after {count} blocks, path is {len(path)-1}")
+        else:
+            print(f"No path for {col},{row}")
+            break

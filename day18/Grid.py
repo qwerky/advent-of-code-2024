@@ -1,3 +1,5 @@
+from Hq import Hq
+
 class Grid:
 
     def __init__(self, size):
@@ -13,34 +15,34 @@ class Grid:
     def dijkstra(self):
         start = (0,0)
         end = (self.width-1, self.height-1)
-
-        Q = set()
         dist = {}
         prev = {}
+        
+        Q = Hq()
+        dist[start] = 0
+        Q.add(start, 0)
+
         for row in range(self.height):
             for col in range(self.width):
                 if self.grid[col][row] == ".":
                     v = (col,row)
-                    dist[v] = self.big
-                    prev[v] = None
-                    Q.add(v)
+                    if not v == start:
+                        dist[v] = self.big
+                        prev[v] = None
+                        Q.add(v, self.big)
         
-        dist[start] = 0
+        
 
-        while len(Q) > 0:
-            min = self.big
-            for u in Q:
-                if dist[u] < min:
-                    min = dist[u]
-                    nearest = u
+        while Q.size() > 0:
+            nearest = Q.pop()
             if nearest == end:
                 break
-            Q.remove(nearest)
             for v in self.getNeighbours(nearest, Q):
                 alt = dist[nearest] + 1
                 if alt < dist[v]:
                     dist[v] = alt
                     prev[v] = nearest
+                    Q.update(v, alt)
 
         path = []
         node = end
@@ -57,16 +59,16 @@ class Grid:
         neighbours = set()
         
         up = (col, row-1)
-        if up in Q:
+        if Q.contains(up):
             neighbours.add(up)
         down = (col, row+1)
-        if down in Q:
+        if Q.contains(down):
             neighbours.add(down)
         left = (col-1, row)
-        if left in Q:
+        if Q.contains(left):
             neighbours.add(left)
         right = (col+1, row)
-        if right in Q:
+        if Q.contains(right):
             neighbours.add(right)
         
         return neighbours
